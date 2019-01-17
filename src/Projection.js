@@ -142,7 +142,7 @@ class Projection extends Component {
 
     let view = d3.select(this.mount)
     this.view = view
-    view.call(this.d3_zoom)
+    view.call(this.d3_zoom).on('dblclick.zoom', null)
     let initial_scale = this.getScaleFromZ(this.camera.position.z)
     var initial_transform = d3.zoomIdentity
       .translate(width / 2, height / 2)
