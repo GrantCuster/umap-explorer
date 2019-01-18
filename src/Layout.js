@@ -34,6 +34,7 @@ class Layout extends Component {
     }
     this.sidebar_ctx = null
     this.setSize = _.debounce(this.setSize.bind(this), 200)
+    this.checkHash = this.checkHash.bind(this)
     this.setSidebarCanvas = this.setSidebarCanvas.bind(this)
     this.toggleAbout = this.toggleAbout.bind(this)
   }
@@ -67,13 +68,20 @@ class Layout extends Component {
 
   componentWillMount() {
     this.setSize()
+    this.checkHash()
+  }
+
+  checkHash() {
+    if (window.location.hash && window.location.hash === '#about') {
+      this.setState({ show_about: true })
+    } else {
+      this.setState({ show_about: false })
+    }
   }
 
   componentDidMount() {
     window.addEventListener('resize', this.setSize)
-    if (window.location.hash && window.location.hash === '#about') {
-      this.setState({ show_about: true })
-    }
+    window.addEventListener('popstate', this.checkHash)
   }
 
   componentWillUnmount() {
@@ -193,7 +201,7 @@ class Layout extends Component {
         ) : null}
       </div>
     ) : (
-      <div>loading layout</div>
+      <div style={{ padding: '1rem' }}>Loading layout...</div>
     )
   }
 }

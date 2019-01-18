@@ -31,7 +31,7 @@ class Data extends Component {
     return this.state.mnist_embeddings && this.state.mnist_labels ? (
       <Layout {...this.state} />
     ) : (
-      'loading data'
+      <div style={{ padding: '1rem' }}>Loading data...</div>
     )
   }
 }
