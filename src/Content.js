@@ -19,7 +19,7 @@ It took me a while to get there, but the key turned out to be this [WestLangley 
 
 ### Generating the images
 
-![](../mnist_tile_solid_0.png)
+![](./mnist_tile_solid_0.png)
 
 _A texture atlas of one chunk of the MNIST dataset._
 
