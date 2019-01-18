@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Sidebar from './Sidebar'
 import Projection from './Projection'
+import About from './About'
 import * as _ from 'lodash'
 
 // padding constructor
@@ -28,23 +29,36 @@ class Layout extends Component {
       ww: null,
       wh: null,
       sidebar_height: null,
-      sidebar_ctx: null,
       hover_index: null,
+      show_about: null,
     }
+    this.sidebar_ctx = null
     this.setSize = _.debounce(this.setSize.bind(this), 200)
     this.setSidebarCanvas = this.setSidebarCanvas.bind(this)
+    this.toggleAbout = this.toggleAbout.bind(this)
   }
 
   setSize() {
     this.setState({ ww: window.innerWidth, wh: window.innerHeight })
     let sidebar_height = this.sidebar_mount.offsetHeight
     this.setState({ sidebar_height: sidebar_height })
+    if (this.sidebar_ctx) this.sidebar_ctx.imageSmoothingEnabled = false
   }
 
   setSidebarCanvas(canvas) {
     let ctx = canvas.getContext('2d')
     ctx.imageSmoothingEnabled = false
-    this.setState({ sidebar_ctx: ctx })
+    this.sidebar_ctx = ctx
+  }
+
+  toggleAbout(state) {
+    if (state === true) {
+      window.history.pushState(null, 'About UMAP Explorer', '#about')
+      this.setState({ show_about: true })
+    } else if (state === false) {
+      window.history.pushState(null, 'UMAP Explorer', window.location.pathname)
+      this.setState({ show_about: false })
+    }
   }
 
   setHoverIndex(hover_index) {
@@ -57,6 +71,9 @@ class Layout extends Component {
 
   componentDidMount() {
     window.addEventListener('resize', this.setSize)
+    if (window.location.hash && window.location.hash === '#about') {
+      this.setState({ show_about: true })
+    }
   }
 
   componentWillUnmount() {
@@ -65,7 +82,8 @@ class Layout extends Component {
 
   render() {
     let { mnist_embeddings, mnist_labels } = this.props
-    let { ww, wh, sidebar_height, sidebar_ctx, hover_index } = this.state
+    let { ww, wh, sidebar_height, hover_index, show_about } = this.state
+    let sidebar_ctx = this.sidebar_ctx
 
     let line_height = 1.5
 
@@ -83,6 +101,7 @@ class Layout extends Component {
       position: 'relative',
       height: '100vh',
       background: '#111',
+      overflow: 'hidden',
     }
 
     let sidebar_image_size, sidebar_orientation
@@ -154,6 +173,7 @@ class Layout extends Component {
             setSidebarCanvas={this.setSidebarCanvas}
             hover_index={hover_index}
             mnist_labels={mnist_labels}
+            toggleAbout={this.toggleAbout}
           />
         </div>
         <div style={main_style}>
@@ -168,6 +188,9 @@ class Layout extends Component {
             setHoverIndex={this.setHoverIndex.bind(this)}
           />
         </div>
+        {show_about ? (
+          <About grem={grem} p={p} toggleAbout={this.toggleAbout} />
+        ) : null}
       </div>
     ) : (
       <div>loading layout</div>

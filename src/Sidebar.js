@@ -69,7 +69,13 @@ class Sidebar extends Component {
         <div style={{ padding: grem / 2 }}>
           <div>
             An interactive UMAP visualization of the MNIST data set.{' '}
-            <a href="#">About</a>
+            <button
+              onClick={() => {
+                this.props.toggleAbout(true)
+              }}
+            >
+              About
+            </button>
           </div>
         </div>
       </div>
