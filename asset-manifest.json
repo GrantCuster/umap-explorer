@@ -1,13 +1,13 @@
 {
   "main.css": "/umap-explorer/static/css/main.c76c0528.chunk.css",
-  "main.js": "/umap-explorer/static/js/main.4b449bac.chunk.js",
-  "main.js.map": "/umap-explorer/static/js/main.4b449bac.chunk.js.map",
+  "main.js": "/umap-explorer/static/js/main.f4fa43b6.chunk.js",
+  "main.js.map": "/umap-explorer/static/js/main.f4fa43b6.chunk.js.map",
   "static/js/1.b0be48eb.chunk.js": "/umap-explorer/static/js/1.b0be48eb.chunk.js",
   "static/js/1.b0be48eb.chunk.js.map": "/umap-explorer/static/js/1.b0be48eb.chunk.js.map",
   "runtime~main.js": "/umap-explorer/static/js/runtime~main.abb4f0ea.js",
   "runtime~main.js.map": "/umap-explorer/static/js/runtime~main.abb4f0ea.js.map",
   "static/css/main.c76c0528.chunk.css.map": "/umap-explorer/static/css/main.c76c0528.chunk.css.map",
   "index.html": "/umap-explorer/index.html",
-  "precache-manifest.dd0957a5f7e7eb6c69ab5fa4d17ce4da.js": "/umap-explorer/precache-manifest.dd0957a5f7e7eb6c69ab5fa4d17ce4da.js",
+  "precache-manifest.0c03fdfcea3c8ceb07170d3c68963503.js": "/umap-explorer/precache-manifest.0c03fdfcea3c8ceb07170d3c68963503.js",
   "service-worker.js": "/umap-explorer/service-worker.js"
 }
