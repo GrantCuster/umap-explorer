@@ -3,6 +3,10 @@ export let about_text = `
 
 This is an interactive visualization that uses the [UMAP algorithm](https://github.com/lmcinnes/umap) to cluster hand-drawn digits from the [MNIST dataset](http://yann.lecun.com/exdb/mnist/). I'm sharing it as an example of how to render tens of thousands of images mapped to data points using the [three.js](https://threejs.org/) library. The code is available [on github](https://github.com/GrantCuster/umap-explorer) and can be adapted or used as a reference for doing similar visualizations with different datasets or algorithms. If you do use it or have questions please let me know at [grantcuster@gmail.com](mailto:grantcuster+umap@gmail.com) or [on Twitter](https://twitter.com/grantcuster).
 
+## Updates
+
+- 2019-01-21: Added T-SNE and UMAP \`min_dist=0.8\` algorithm options. \`min_dist\` setting based on this [Twitter exchange](https://twitter.com/kcimc/status/930149461078265856). Interpolation is done using [TWEEN.js](https://github.com/tweenjs/tween.js/) and updating the position attribute of the points.
+
 ## About UMAP
 
 The UMAP algorithm is responsible for the clustering of the images. The coordinates for each data point in the visualization are from the [UMAP MNIST example notebook](https://github.com/lmcinnes/umap_paper_notebooks/blob/master/UMAP%20MNIST.ipynb). Check out [the UMAP guides and documentation](https://umap-learn.readthedocs.io/en/latest/) to learn more about how UMAP works.
@@ -40,7 +44,8 @@ For highlighting I again used an approach from my past project. Using three.js's
 - I'd love to see this approach applied to other datasets and algorithms. If I had the time I'd definitely do a T-SNE on MNIST version to compare with UMAP.
 - I'd love to see what you could do by switching aprite sheets for different zoom levels. If you used different resolution sprites for different zoom levels you might get better performance. It could also be interesting to switch to something more abstract (like a circle sprite) when you're zoomed out and then switch over to the images only when you're zoomed in enough that they're useful.
 - Different scaling of points on zoom. Like I said, I don't think I nailed this part. I'd love to see someone take a more rigorous approach to it.
-- Transitions between datasets or algorithms. [Kyle McDonald made some GIFs of transitioning between UMAP and T-SNE](https://twitter.com/kcimc/status/930348969275691008). The way the shaders are set-up, I can kind of make out how you could do this (switch the position attributes, interpolate with something like tween.js), and it has the potential to look really slick.
+- (DONE 2019-01-21) Transitions between algorithms. [Kyle McDonald made some GIFs of transitioning between UMAP and T-SNE](https://twitter.com/kcimc/status/930348969275691008). The way the shaders are set-up, I can kind of make out how you could do this (switch the position attributes, interpolate with something like tween.js), and it has the potential to look really slick.
+- Try it on the fashion MNIST dataset. [UMAP example here.](https://umap-learn.readthedocs.io/en/latest/supervised.html)
 - Port the visualization from three.js to [REGL.js](https://peterbeshai.com/beautifully-animate-points-with-webgl-and-regl.html).
 - Constraining zoom and pan so you can't scroll the visualization off-screen. I tried this a bit but ended up scoping it out of this version. If I cleaned up the code for wiring d3-zoom to three.js's camera this would probably be easier.
 - Make this a general framework for visualization. Easy, right? I think the core of this could be a really good approach for visualizing lots of datasets and how machine learning is viewing them. Making it friendly and handling all the edge cases would be a big undertaking though.

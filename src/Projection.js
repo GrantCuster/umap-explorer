@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import * as THREE from 'three'
 import * as _ from 'lodash'
 import * as d3 from 'd3'
+import * as TWEEN from '@tweenjs/tween.js'
 
 // Constants for sprite sheets
 let sprite_side = 73
@@ -23,9 +24,10 @@ let mnist_images = mnist_tile_locations.map(src => {
 })
 
 let zoomScaler = input => {
+  console.log(input)
   let scale1 = d3
     .scaleLinear()
-    .domain([10, 5])
+    .domain([20, 5])
     .range([14, 28])
     .clamp(true)
   let scale2 = d3
@@ -34,8 +36,10 @@ let zoomScaler = input => {
     .range([28, 56])
   if (input >= 5) {
     return scale1(input)
+    // return 28
   } else if (input <= 2) {
-    return scale2(input)
+    // return scale2(input)
+    return 28
   } else {
     return 28
   }
@@ -52,6 +56,55 @@ class Projection extends Component {
     this.animate = this.animate.bind(this)
     this.getScaleFromZ = this.getScaleFromZ.bind(this)
     this.getZFromScale = this.getZFromScale.bind(this)
+    this.changeEmbeddings = this.changeEmbeddings.bind(this)
+  }
+
+  changeEmbeddings(prev_choice, new_choice) {
+    // assumes mnist embeddings has been updated
+
+    let ranges = []
+    for (let i = 0; i < sprite_number; i++) {
+      let start = i * sprite_size
+      let end = (i + 1) * sprite_size
+      if (i === sprite_number - 1) end = sprite_number * sprite_size
+      ranges.push([start, end])
+    }
+
+    let embedding_chunks = ranges.map(range =>
+      this.props[this.props.algorithm_embedding_keys[new_choice]].slice(
+        range[0],
+        range[1]
+      )
+    )
+
+    for (let c = 0; c < sprite_number; c++) {
+      let echunk = embedding_chunks[c]
+
+      let points = this.scene.children[0].children[c]
+      let numVertices = echunk.length
+      let position = points.geometry.attributes.position.array
+      let target = new Float32Array(numVertices * 3)
+      for (let i = 0, index = 0, l = numVertices; i < l; i++, index += 3) {
+        let x = echunk[i][0]
+        let y = echunk[i][1]
+        let z = 0
+        target[index] = x
+        target[index + 1] = y
+        target[index + 2] = z
+      }
+
+      let tween = new TWEEN.Tween(position)
+        .to(target, 1000)
+        .easing(TWEEN.Easing.Linear.None)
+      tween.onUpdate(function() {
+        points.geometry.attributes.position = new THREE.BufferAttribute(
+          position,
+          3
+        )
+        points.geometry.attributes.position.needsUpdate = true // required after the first render
+      })
+      tween.start()
+    }
   }
 
   getZFromScale(scale) {
@@ -121,14 +174,18 @@ class Projection extends Component {
     let max_x_from_center = _.max([min_x, max_x].map(m => Math.abs(m)))
     let max_y_from_center = _.max([min_y, max_y].map(m => Math.abs(m)))
 
+    let max_center = Math.max(max_x_from_center, max_y_from_center)
+
     let camera_z_start
     if (data_aspect > aspect) {
       // console.log("width is limiter");
-      camera_z_start = max_x_from_center / Math.tan(rvFOV / 2) / aspect
+      // camera_z_start = max_x_from_center / Math.tan(rvFOV / 2) / aspect
     } else {
       // console.log("height is limiter");
-      camera_z_start = max_y_from_center / Math.tan(rvFOV / 2)
+      // camera_z_start = max_y_from_center / Math.tan(rvFOV / 2)
     }
+
+    camera_z_start = max_center / Math.tan(rvFOV / 2)
 
     let far = camera_z_start * 1.25
     this.camera.far = far
@@ -199,7 +256,17 @@ class Projection extends Component {
       geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3))
       geometry.addAttribute('offset', new THREE.BufferAttribute(offsets, 2))
       geometry.addAttribute('color', new THREE.BufferAttribute(colors, 3))
-      geometry.attributes.position.copyVector3sArray(vertices)
+
+      for (let i = 0, index = 0, l = numVertices; i < l; i++, index += 3) {
+        let x = echunk[i][0]
+        let y = echunk[i][1]
+        let z = 0
+        positions[index] = x
+        positions[index + 1] = y
+        positions[index + 2] = z
+      }
+
+      // geometry.attributes.position.copyVector3sArray(vertices)
 
       let texture_subsize = 1 / sprite_side
 
@@ -326,9 +393,13 @@ class Projection extends Component {
   }
 
   highlightPoint(sprite_index, digit_index, full_index) {
+    let { algorithm_embedding_keys, algorithm_choice } = this.props
+
     let point = this.scene.children[1].children[0]
 
-    let embedding = this.props.mnist_embeddings[full_index]
+    let embedding = this.props[algorithm_embedding_keys[algorithm_choice]][
+      full_index
+    ]
 
     let vert = new THREE.Vector3(embedding[0], embedding[1], 0)
     let vertices = [vert]
@@ -449,11 +520,11 @@ class Projection extends Component {
 
   animate() {
     requestAnimationFrame(this.animate)
+    TWEEN.update()
     this.renderer.render(this.scene, this.camera)
   }
 
   componentDidMount() {
-    let { width, height } = this.props
     this.init()
   }
 
@@ -461,6 +532,12 @@ class Projection extends Component {
     let { width, height } = this.props
     if (width !== prevProps.width || height !== prevProps.height) {
       this.handleResize(width, height)
+    }
+    if (prevProps.algorithm_choice !== this.props.algorithm_choice) {
+      this.changeEmbeddings(
+        prevProps.algorithm_choice,
+        this.props.algorithm_choice
+      )
     }
   }
 

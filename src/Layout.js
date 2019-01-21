@@ -31,12 +31,19 @@ class Layout extends Component {
       sidebar_height: null,
       hover_index: null,
       show_about: null,
+      algorithm_choice: 0,
     }
     this.sidebar_ctx = null
     this.setSize = _.debounce(this.setSize.bind(this), 200)
     this.checkHash = this.checkHash.bind(this)
     this.setSidebarCanvas = this.setSidebarCanvas.bind(this)
     this.toggleAbout = this.toggleAbout.bind(this)
+    this.selectAlgorithm = this.selectAlgorithm.bind(this)
+  }
+
+  selectAlgorithm(v) {
+    let i = this.props.algorithm_options.indexOf(v)
+    this.setState({ algorithm_choice: i })
   }
 
   setSize() {
@@ -89,8 +96,22 @@ class Layout extends Component {
   }
 
   render() {
-    let { mnist_embeddings, mnist_labels } = this.props
-    let { ww, wh, sidebar_height, hover_index, show_about } = this.state
+    let {
+      mnist_embeddings,
+      tsne_mnist_embeddings,
+      md08_umap_mnist_embeddings,
+      mnist_labels,
+      algorithm_options,
+      algorithm_embedding_keys,
+    } = this.props
+    let {
+      ww,
+      wh,
+      sidebar_height,
+      hover_index,
+      show_about,
+      algorithm_choice,
+    } = this.state
     let sidebar_ctx = this.sidebar_ctx
 
     let line_height = 1.5
@@ -182,6 +203,9 @@ class Layout extends Component {
             hover_index={hover_index}
             mnist_labels={mnist_labels}
             toggleAbout={this.toggleAbout}
+            algorithm_options={algorithm_options}
+            algorithm_choice={algorithm_choice}
+            selectAlgorithm={this.selectAlgorithm}
           />
         </div>
         <div style={main_style}>
@@ -189,11 +213,15 @@ class Layout extends Component {
             width={main_style.width}
             height={main_style.height}
             mnist_embeddings={mnist_embeddings}
+            tsne_mnist_embeddings={tsne_mnist_embeddings}
+            md08_umap_mnist_embeddings={md08_umap_mnist_embeddings}
             mnist_labels={mnist_labels}
             color_array={color_array}
             sidebar_ctx={sidebar_ctx}
             sidebar_image_size={sidebar_image_size}
             setHoverIndex={this.setHoverIndex.bind(this)}
+            algorithm_embedding_keys={algorithm_embedding_keys}
+            algorithm_choice={algorithm_choice}
           />
         </div>
         {show_about ? (

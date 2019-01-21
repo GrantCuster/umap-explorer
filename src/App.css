@@ -10,6 +10,11 @@ html {
   font-feature-settings: 'tnum';
 }
 
+code {
+  font-size: 0.9em;
+  padding: 0 0.3em;
+}
+
 a {
   color: #fff;
 }
