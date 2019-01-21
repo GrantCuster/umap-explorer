@@ -24,7 +24,6 @@ let mnist_images = mnist_tile_locations.map(src => {
 })
 
 let zoomScaler = input => {
-  console.log(input)
   let scale1 = d3
     .scaleLinear()
     .domain([20, 5])
