@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/umap-explorer/precache-manifest.26c314217010d67563c22c2736021ce7.js"
+  "/umap-explorer/precache-manifest.791d67bf5334787b80566f672da05112.js"
 );
 
 workbox.clientsClaim();
