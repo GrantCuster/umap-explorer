@@ -41,7 +41,6 @@ For highlighting I again used an approach from my past project. Using three.js's
 
 ### Things I'd like to see (let me know if you do them)
 
-- I'd love to see this approach applied to other datasets and algorithms. If I had the time I'd definitely do a T-SNE on MNIST version to compare with UMAP.
 - I'd love to see what you could do by switching aprite sheets for different zoom levels. If you used different resolution sprites for different zoom levels you might get better performance. It could also be interesting to switch to something more abstract (like a circle sprite) when you're zoomed out and then switch over to the images only when you're zoomed in enough that they're useful.
 - Different scaling of points on zoom. Like I said, I don't think I nailed this part. I'd love to see someone take a more rigorous approach to it.
 - (DONE 2019-01-21) Transitions between algorithms. [Kyle McDonald made some GIFs of transitioning between UMAP and T-SNE](https://twitter.com/kcimc/status/930348969275691008). The way the shaders are set-up, I can kind of make out how you could do this (switch the position attributes, interpolate with something like tween.js), and it has the potential to look really slick.
