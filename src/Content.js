@@ -6,6 +6,7 @@ This is an interactive visualization that uses the [UMAP algorithm](https://gith
 ## Updates
 
 - 2019-01-21: Added T-SNE and UMAP \`min_dist=0.8\` algorithm options. \`min_dist\` setting based on this [Twitter exchange](https://twitter.com/kcimc/status/930149461078265856). Interpolation is done using [TWEEN.js](https://github.com/tweenjs/tween.js/) and updating the position attribute of the points.
+- 2019-01-24: Updated how I handle transparency. I discard pixels below 0.5 and turn everything left white. This makes the zoomed out blobs less 'muddy' looking. It is possible to do partial transparency, but doing that across all the points caused my browser to crash on zoom. I do use partial transparency for the hover sprite overlay, however, since that is only one point at a time.
 
 ## About UMAP
 
@@ -33,7 +34,7 @@ Douglas shows how to use ImageMagick to create texture atlases. For our project 
 
 ### Gotchas: transparency, image size, and highlighting
 
-In this visualization, the transparency of the digits comes from discarding color data below a threshold of 0.5. As far as I can tell, you can't do gradual transparency with this approach. You can see the effect of this when you're zoomed out – the darker pixels within the clusters are ones that were above the threshold but not pure white. I don't mind the effect so much here. I was excited I could get what transparency I did. But it might be more of an issue for other datasets. For many image datasets you wouldn't want transparency at all. I am curious how this visualization would feel with non-transparent images.
+In this visualization, the transparency of the digits comes from discarding color data below a threshold of 0.5. ~~As far as I can tell, you can't do gradual transparency with this approach. You can see the effect of this when you're zoomed out – the darker pixels within the clusters are ones that were above the threshold but not pure white. I don't mind the effect so much here. I was excited I could get what transparency I did. But it might be more of an issue for other datasets.~~ UPDATE: I changed all the unthresholded pixels to white to get rid of the muddy effect.  For many image datasets you wouldn't want transparency at all. I am curious how this visualization would feel with non-transparent images.
 
 I think for non-transparent images you might want to adjust the size of the sprites even more. That gets into one of the biggest caveats about using three.js (and specifically the points object) for this type of visualization. By default the image data point is the same size no matter your zoom level (it doesn't get bigger as you get closer as an object would in real life). This can be a benefit, it lets you see more of the local structure as you zoom in. But you probably don't want the points to stay exactly the same size. What you can do is adjust the size of the points as you zoom by setting the uniform. As I understand it, a uniform isn't very expensive to update so you can do it a bunch of times on zoom. For this visualization, I set my own custom zoom scaler using d3-scale, which enlarges the size of the points at certain specified intervals. If I had more time I would definitely dial in the feel of this a bit more, but I think I got a relatively functional version in.
 
