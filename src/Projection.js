@@ -313,6 +313,9 @@ class Projection extends Component {
           vec2 uv = vec2( gl_PointCoord.x, gl_PointCoord.y );
           vec4 tex = texture2D( texture, uv * repeat + vOffset );
           if ( tex.r < 0.5 ) discard;
+          tex.r = 1.0;
+          tex.g = 1.0;
+          tex.b = 1.0;
           gl_FragColor = tex * vec4(vColor, 1.0);
         }`
 
@@ -373,7 +376,10 @@ class Projection extends Component {
         void main() {
           vec2 uv = vec2( gl_PointCoord.x, gl_PointCoord.y );
           vec4 tex = texture2D( texture, uv * repeat + vOffset );
-          if ( tex.r < 0.5 ) discard;
+          tex.a = tex.r;
+          tex.r = 1.0;
+          tex.g = 1.0;
+          tex.b = 1.0;
           gl_FragColor = tex;
         }`
 
@@ -382,6 +388,7 @@ class Projection extends Component {
       uniforms: uniforms,
       vertexShader: vertex_shader,
       fragmentShader: fragment_shader,
+      transparent: true,
     })
 
     let point = new THREE.Points(geometry, material)
